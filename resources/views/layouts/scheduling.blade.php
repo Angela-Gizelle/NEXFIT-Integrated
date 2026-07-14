@@ -216,10 +216,9 @@
             font-size: .75rem; font-weight: 700; color: #fff;
             flex-shrink: 0;
         }
-        .sidebar-footer .user-info { min-width: 0; }
+        .sidebar-footer .user-info { min-width: 0; flex: 1; }
         .sidebar-footer .user-name { font-size: .82rem; font-weight: 600; color: var(--text-strong); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .sidebar-footer .user-role { font-size: .7rem; color: var(--text-faint); }
-
         .sidebar-logout-btn {
             display: grid; place-items: center;
             width: 30px; height: 30px;
@@ -227,10 +226,10 @@
             border: 1px solid transparent;
             background: transparent;
             color: var(--text-faint);
-            cursor: pointer;
+            flex-shrink: 0;
+            transition: background .15s ease, color .15s ease;
         }
         .sidebar-logout-btn:hover { background: var(--danger-bg); color: var(--danger); }
-
 
         /* Mobile sidebar toggle */
         .sidebar-toggle {
@@ -836,18 +835,18 @@
         </a>
     </nav>
 
-    {{-- User footer --}}
+    {{-- User footer: shows the actual signed-in account below the nav --}}
     @php
-        $staffAccount = auth('staff')->user();
-        $staffInitials = $staffAccount
-            ? collect(explode(' ', $staffAccount->full_name))->map(fn ($p) => strtoupper(substr($p, 0, 1)))->take(2)->join('')
+        $account = auth('staff')->user();
+        $initials = $account
+            ? collect(explode(' ', $account->full_name))->map(fn ($part) => strtoupper(substr($part, 0, 1)))->take(2)->join('')
             : '?';
     @endphp
     <div class="sidebar-footer">
-        <div class="user-avatar">{{ $staffInitials }}</div>
+        <div class="user-avatar">{{ $initials }}</div>
         <div class="user-info">
-            <div class="user-name">{{ $staffAccount->full_name ?? 'Unknown' }}</div>
-            <div class="user-role">{{ $staffAccount->role ?? 'Staff' }}</div>
+            <div class="user-name">{{ $account->full_name ?? 'Unknown' }}</div>
+            <div class="user-role">{{ $account->role ?? '' }}</div>
         </div>
         <form action="{{ route('staff.logout') }}" method="POST" class="ms-auto">
             @csrf

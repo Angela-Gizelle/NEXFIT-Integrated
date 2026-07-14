@@ -42,6 +42,16 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'staff' => [
+            'driver' => 'session',
+            'provider' => 'staff',
+        ],
+
+        'trainer' => [
+            'driver' => 'session',
+            'provider' => 'trainer',
+        ],
     ],
 
     /*
@@ -65,6 +75,16 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', User::class),
+        ],
+
+        'staff' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Staff::class,
+        ],
+
+        'trainer' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Trainer::class,
         ],
 
         // 'users' => [

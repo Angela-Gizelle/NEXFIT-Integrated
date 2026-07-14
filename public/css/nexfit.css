@@ -1,0 +1,1231 @@
+/* ==========================================================================
+   NexFit — Session Management Module Stylesheet
+   Color palette: Charcoal-gray sidebar + Orange accent
+   Black replaced with #1E2128 (charcoal-gray) for professional look.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   CSS Custom Properties (Color System)
+   -------------------------------------------------------------------------- */
+   :root {
+    /* Primary palette */
+    --nf-bg-base:       #131720;   /* Deepest background */
+    --nf-bg-main:       #181D27;   /* Main content area */
+    --nf-bg-sidebar:    #1E2330;   /* Sidebar — charcoal-gray (not black) */
+    --nf-bg-card:       #242A38;   /* Card surfaces */
+    --nf-bg-card-hover: #2B3245;
+    --nf-bg-input:      #1A2031;
+    --nf-border:        #2E3550;
+    --nf-border-light:  #3A4460;
+
+    /* Orange accent (brand) */
+    --nf-accent:        #F97316;   /* Primary orange */
+    --nf-accent-hover:  #EA6C0A;
+    --nf-accent-light:  rgba(249, 115, 22, 0.15);
+    --nf-accent-glow:   rgba(249, 115, 22, 0.25);
+
+    /* Status colors */
+    --nf-green:         #10B981;
+    --nf-green-bg:      rgba(16, 185, 129, 0.12);
+    --nf-blue:          #3B82F6;
+    --nf-blue-bg:       rgba(59, 130, 246, 0.12);
+    --nf-amber:         #F59E0B;
+    --nf-amber-bg:      rgba(245, 158, 11, 0.12);
+    --nf-red:           #EF4444;
+    --nf-red-bg:        rgba(239, 68, 68, 0.12);
+    --nf-slate:         #64748B;
+    --nf-slate-bg:      rgba(100, 116, 139, 0.12);
+
+    /* Typography */
+    --nf-text-primary:  #F1F5F9;
+    --nf-text-secondary:#94A3B8;
+    --nf-text-muted:    #64748B;
+
+    /* Spacing system (8px base) */
+    --nf-radius:        8px;
+    --nf-radius-lg:     12px;
+    --nf-sidebar-w:     220px;
+    --nf-topbar-h:      56px;
+
+    /* Typography */
+    --nf-font:          'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* --------------------------------------------------------------------------
+   Base Reset
+   -------------------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+body.nf-body {
+    margin: 0;
+    font-family: var(--nf-font);
+    background-color: var(--nf-bg-main);
+    color: var(--nf-text-primary);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--nf-accent); text-decoration: none; }
+a:hover { color: var(--nf-accent-hover); }
+
+/* --------------------------------------------------------------------------
+   Layout Shell
+   -------------------------------------------------------------------------- */
+.nf-wrapper {
+    min-height: 100vh;
+}
+
+/* --------------------------------------------------------------------------
+   Sidebar
+   -------------------------------------------------------------------------- */
+.nf-sidebar {
+    width: var(--nf-sidebar-w);
+    min-height: 100vh;
+    background-color: var(--nf-bg-sidebar);
+    border-right: 1px solid var(--nf-border);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+
+.nf-sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 16px 16px;
+    border-bottom: 1px solid var(--nf-border);
+}
+
+.nf-logo-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--nf-accent);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.nf-logo-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.nf-logo-brand {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--nf-text-primary);
+    letter-spacing: 0.05em;
+}
+
+.nf-logo-sub {
+    font-size: 10px;
+    color: var(--nf-text-muted);
+    letter-spacing: 0.02em;
+}
+
+/* Nav */
+.nf-nav {
+    padding: 12px 8px;
+}
+
+.nf-nav-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--nf-text-muted);
+    padding: 8px 8px 4px;
+    margin-top: 4px;
+}
+
+.nf-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: var(--nf-radius);
+    color: var(--nf-text-secondary);
+    font-size: 13.5px;
+    font-weight: 500;
+    transition: background 0.15s, color 0.15s;
+    margin-bottom: 2px;
+}
+
+.nf-nav-item i {
+    font-size: 16px;
+    width: 18px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.nf-nav-item:hover {
+    background: var(--nf-accent-light);
+    color: var(--nf-text-primary);
+}
+
+.nf-nav-item.active {
+    background: var(--nf-accent-light);
+    color: var(--nf-accent);
+    border-left: 3px solid var(--nf-accent);
+    padding-left: 9px;
+}
+
+/* Sidebar user footer */
+.nf-sidebar-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    border-top: 1px solid var(--nf-border);
+}
+
+.nf-user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--nf-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.nf-user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.nf-user-name {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--nf-text-primary);
+    line-height: 1.3;
+}
+
+.nf-user-role {
+    font-size: 11px;
+    color: var(--nf-text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   Main Content
+   -------------------------------------------------------------------------- */
+.nf-main {
+    background-color: var(--nf-bg-main);
+    min-width: 0;
+}
+
+/* Top bar */
+.nf-topbar {
+    height: var(--nf-topbar-h);
+    background-color: var(--nf-bg-sidebar);
+    border-bottom: 1px solid var(--nf-border);
+    padding: 0 24px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nf-breadcrumb-prefix {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--nf-text-muted);
+}
+
+.nf-breadcrumb-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--nf-text-secondary);
+}
+
+.nf-clock {
+    font-size: 13px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.05em;
+}
+
+.nf-icon-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    color: var(--nf-text-secondary);
+    transition: background 0.15s, color 0.15s;
+}
+
+.nf-icon-btn:hover {
+    background: var(--nf-accent-light);
+    color: var(--nf-accent);
+}
+
+/* Page content */
+.nf-content {
+    padding-top: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Typography
+   -------------------------------------------------------------------------- */
+.nf-page-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--nf-text-primary);
+    letter-spacing: -0.02em;
+}
+
+.nf-page-sub {
+    font-size: 13px;
+    color: var(--nf-text-secondary);
+}
+
+.nf-section-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--nf-text-primary);
+    margin-bottom: 0;
+}
+
+.text-accent { color: var(--nf-accent) !important; }
+
+.nf-live-badge {
+    font-size: 12px;
+    color: var(--nf-green);
+    font-weight: 500;
+}
+
+/* Pulse animation for live dot */
+@keyframes nf-pulse {
+    0%   { opacity: 1; transform: scale(1); }
+    50%  { opacity: 0.4; transform: scale(0.8); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.nf-pulse {
+    animation: nf-pulse 1.5s ease-in-out infinite;
+    font-size: 8px;
+    vertical-align: middle;
+}
+
+/* --------------------------------------------------------------------------
+   Cards
+   -------------------------------------------------------------------------- */
+.nf-card {
+    background: var(--nf-bg-card);
+    border: 1px solid var(--nf-border);
+    border-radius: var(--nf-radius-lg);
+    padding: 20px 24px;
+}
+
+.nf-info-card {
+    background: var(--nf-bg-card);
+}
+
+.nf-divider {
+    border-color: var(--nf-border);
+    margin: 16px 0;
+    opacity: 1;
+}
+
+/* Stat cards */
+.nf-stat-card {
+    background: var(--nf-bg-card);
+    border: 1px solid var(--nf-border);
+    border-radius: var(--nf-radius-lg);
+    padding: 20px 24px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+}
+
+.nf-stat-card:hover {
+    border-color: var(--nf-accent);
+}
+
+.nf-stat-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--nf-text-muted);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+
+.nf-stat-value {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--nf-text-primary);
+    letter-spacing: -0.02em;
+}
+
+.nf-stat-icon {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 32px;
+    color: var(--nf-accent-light);
+    opacity: 0.6;
+}
+
+/* --------------------------------------------------------------------------
+   Buttons
+   -------------------------------------------------------------------------- */
+.btn { font-weight: 500; font-size: 13px; border-radius: var(--nf-radius); }
+
+.nf-btn-primary {
+    background: var(--nf-accent);
+    border-color: var(--nf-accent);
+    color: #fff;
+    padding: 8px 18px;
+    transition: background 0.15s, box-shadow 0.15s;
+}
+
+.nf-btn-primary:hover {
+    background: var(--nf-accent-hover);
+    border-color: var(--nf-accent-hover);
+    color: #fff;
+    box-shadow: 0 0 0 3px var(--nf-accent-glow);
+}
+
+.nf-btn-secondary {
+    background: var(--nf-bg-card-hover);
+    border: 1px solid var(--nf-border-light);
+    color: var(--nf-text-primary);
+    padding: 8px 18px;
+}
+
+.nf-btn-secondary:hover {
+    background: var(--nf-accent-light);
+    border-color: var(--nf-accent);
+    color: var(--nf-accent);
+}
+
+.nf-btn-ghost {
+    background: transparent;
+    border: 1px solid var(--nf-border);
+    color: var(--nf-text-secondary);
+    padding: 8px 18px;
+}
+
+.nf-btn-ghost:hover {
+    border-color: var(--nf-border-light);
+    color: var(--nf-text-primary);
+    background: var(--nf-bg-card-hover);
+}
+
+.nf-btn-danger {
+    background: var(--nf-red-bg);
+    border: 1px solid var(--nf-red);
+    color: var(--nf-red);
+    padding: 8px 18px;
+}
+
+.nf-btn-danger:hover {
+    background: var(--nf-red);
+    color: #fff;
+}
+
+/* Action buttons (inline table) */
+.nf-btn-action {
+    font-size: 12px;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.nf-btn-action-green {
+    background: var(--nf-green-bg);
+    border: 1px solid var(--nf-green);
+    color: var(--nf-green);
+}
+
+.nf-btn-action-green:hover {
+    background: var(--nf-green);
+    color: #fff;
+}
+
+.nf-btn-action-outline {
+    background: var(--nf-bg-card-hover);
+    border: 1px solid var(--nf-border-light);
+    color: var(--nf-text-primary);
+}
+
+.nf-btn-action-outline:hover {
+    border-color: var(--nf-accent);
+    color: var(--nf-accent);
+}
+
+.nf-btn-action-danger {
+    background: var(--nf-red-bg);
+    border: 1px solid var(--nf-red);
+    color: var(--nf-red);
+}
+
+.nf-btn-action-danger:hover {
+    background: var(--nf-red);
+    color: #fff;
+}
+
+/* Toggle tabs (member/walk-in) */
+.nf-toggle-tabs {
+    display: flex;
+    background: var(--nf-bg-input);
+    border: 1px solid var(--nf-border);
+    border-radius: var(--nf-radius);
+    padding: 4px;
+    gap: 4px;
+    width: fit-content;
+}
+
+.nf-toggle-tab {
+    background: transparent;
+    border: none;
+    color: var(--nf-text-secondary);
+    padding: 6px 20px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+
+.nf-toggle-tab.active {
+    background: var(--nf-accent);
+    color: #fff;
+}
+
+/* --------------------------------------------------------------------------
+   Form Controls
+   -------------------------------------------------------------------------- */
+.nf-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--nf-text-secondary);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+
+.nf-input {
+    background-color: var(--nf-bg-input) !important;
+    border: 1px solid var(--nf-border) !important;
+    color: var(--nf-text-primary) !important;
+    border-radius: var(--nf-radius) !important;
+    font-size: 13.5px;
+    padding: 8px 12px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.nf-input:focus {
+    border-color: var(--nf-accent) !important;
+    box-shadow: 0 0 0 3px var(--nf-accent-glow) !important;
+    outline: none;
+}
+
+.nf-input::placeholder {
+    color: var(--nf-text-muted);
+}
+
+.nf-input option {
+    background-color: var(--nf-bg-card);
+    color: var(--nf-text-primary);
+}
+
+/* Search bar */
+.nf-search-wrap {
+    position: relative;
+}
+
+.nf-search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--nf-text-muted);
+    font-size: 14px;
+    pointer-events: none;
+}
+
+.nf-search-input {
+    padding-left: 36px !important;
+}
+
+/* Bootstrap validation override */
+.is-invalid.nf-input {
+    border-color: var(--nf-red) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Table
+   -------------------------------------------------------------------------- */
+.nf-table {
+    color: var(--nf-text-primary);
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 0;
+}
+
+.nf-table thead th {
+    background: var(--nf-bg-base);
+    color: var(--nf-text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--nf-border);
+    border-top: none;
+    white-space: nowrap;
+}
+
+.nf-table tbody tr {
+    transition: background 0.12s;
+}
+
+.nf-table tbody tr:hover {
+    background-color: var(--nf-bg-card-hover);
+}
+
+.nf-table tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--nf-border);
+    vertical-align: middle;
+}
+
+.nf-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Alert row (zero credits) */
+.nf-row-alert td:first-child {
+    border-left: 3px solid var(--nf-red);
+}
+
+/* Member avatar */
+.nf-member-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--nf-accent-light);
+    border: 1px solid var(--nf-accent);
+    color: var(--nf-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.nf-avatar-sm {
+    width: 28px;
+    height: 28px;
+    font-size: 10px;
+}
+
+/* Cell typography */
+.nf-cell-name {
+    font-weight: 500;
+    color: var(--nf-text-primary);
+    font-size: 13.5px;
+}
+
+.nf-cell-sub {
+    font-size: 11px;
+    color: var(--nf-text-muted);
+    margin-top: 1px;
+}
+
+.nf-cell-meta {
+    color: var(--nf-text-secondary);
+    font-size: 13px;
+}
+
+.nf-amount {
+    font-weight: 600;
+    color: var(--nf-text-primary);
+    font-variant-numeric: tabular-nums;
+}
+
+.nf-credit-num {
+    font-weight: 600;
+    font-size: 15px;
+    font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------------------
+   Status Badges
+   -------------------------------------------------------------------------- */
+.nf-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11.5px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.nf-badge-dot {
+    font-size: 6px;
+}
+
+.nf-badge-confirmed {
+    background: var(--nf-green-bg);
+    color: var(--nf-green);
+    border: 1px solid var(--nf-green);
+}
+
+.nf-badge-conducted {
+    background: var(--nf-blue-bg);
+    color: var(--nf-blue);
+    border: 1px solid var(--nf-blue);
+}
+
+.nf-badge-pending {
+    background: var(--nf-amber-bg);
+    color: var(--nf-amber);
+    border: 1px solid var(--nf-amber);
+}
+
+.nf-badge-cancelled {
+    background: var(--nf-red-bg);
+    color: var(--nf-red);
+    border: 1px solid var(--nf-red);
+}
+
+.nf-badge-noshow,
+.nf-badge-rescheduled {
+    background: var(--nf-slate-bg);
+    color: var(--nf-slate);
+    border: 1px solid var(--nf-slate);
+}
+
+.nf-badge-info {
+    background: var(--nf-blue-bg);
+    color: var(--nf-blue);
+    border: 1px solid var(--nf-blue);
+}
+
+/* --------------------------------------------------------------------------
+   Credit progress bar
+   -------------------------------------------------------------------------- */
+.nf-credit-bar {
+    width: 100%;
+    height: 6px;
+    background: var(--nf-border);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 4px;
+}
+
+.nf-credit-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.4s ease;
+}
+
+.nf-bar-high  { background: var(--nf-green); }
+.nf-bar-mid   { background: var(--nf-accent); }
+.nf-bar-low   { background: var(--nf-amber); }
+.nf-bar-empty { background: var(--nf-red); }
+
+/* --------------------------------------------------------------------------
+   Pagination
+   -------------------------------------------------------------------------- */
+.nf-pagination {
+    border-top: 1px solid var(--nf-border);
+}
+
+.nf-pagination-info {
+    font-size: 12px;
+    color: var(--nf-text-muted);
+}
+
+.nf-page-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--nf-text-secondary);
+    background: var(--nf-bg-card-hover);
+    border: 1px solid var(--nf-border);
+    transition: all 0.15s;
+    text-decoration: none;
+}
+
+.nf-page-btn:hover:not(.disabled) {
+    border-color: var(--nf-accent);
+    color: var(--nf-accent);
+}
+
+.nf-page-btn.active {
+    background: var(--nf-accent);
+    border-color: var(--nf-accent);
+    color: #fff;
+}
+
+.nf-page-btn.disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+/* --------------------------------------------------------------------------
+   Modals
+   -------------------------------------------------------------------------- */
+.nf-modal {
+    background: var(--nf-bg-card);
+    border: 1px solid var(--nf-border);
+    color: var(--nf-text-primary);
+    border-radius: var(--nf-radius-lg);
+}
+
+.nf-modal-header {
+    background: var(--nf-bg-sidebar);
+    border-bottom: 1px solid var(--nf-border);
+    padding: 16px 20px;
+}
+
+.nf-modal-header .modal-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--nf-text-primary);
+}
+
+.nf-modal-footer {
+    background: var(--nf-bg-sidebar);
+    border-top: 1px solid var(--nf-border);
+}
+
+/* --------------------------------------------------------------------------
+   Detail view
+   -------------------------------------------------------------------------- */
+.nf-detail-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.nf-detail-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--nf-text-muted);
+}
+
+.nf-detail-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--nf-text-primary);
+}
+
+/* --------------------------------------------------------------------------
+   Info panel
+   -------------------------------------------------------------------------- */
+.nf-info-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nf-info-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--nf-border);
+    font-size: 13px;
+}
+
+.nf-info-list li:last-child {
+    border-bottom: none;
+}
+
+.nf-info-time {
+    font-weight: 600;
+    color: var(--nf-accent);
+}
+
+.nf-info-desc {
+    color: var(--nf-text-secondary);
+}
+
+.nf-info-note {
+    font-size: 12.5px;
+    color: var(--nf-text-secondary);
+    background: var(--nf-amber-bg);
+    border: 1px solid var(--nf-amber);
+    border-radius: var(--nf-radius);
+    padding: 10px 12px;
+}
+
+/* Current balance display */
+.nf-current-balance {
+    background: var(--nf-accent-light);
+    border: 1px solid var(--nf-accent);
+    border-radius: var(--nf-radius);
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--nf-text-secondary);
+}
+
+/* --------------------------------------------------------------------------
+   Price reference panel
+   -------------------------------------------------------------------------- */
+.nf-price-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    font-size: 13px;
+    color: var(--nf-text-secondary);
+    border-bottom: 1px solid var(--nf-border);
+}
+
+.nf-price-row:last-of-type {
+    border-bottom: none;
+}
+
+.nf-price-selected {
+    font-size: 14px;
+    color: var(--nf-text-primary);
+    padding-top: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   Receipt
+   -------------------------------------------------------------------------- */
+.nf-receipt {
+    border: 1px dashed var(--nf-border-light) !important;
+}
+
+.nf-receipt-header {
+    padding-bottom: 16px;
+}
+
+.nf-receipt-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 22px;
+    margin-bottom: 4px;
+}
+
+.nf-receipt-studio {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--nf-text-primary);
+}
+
+.nf-receipt-sub {
+    font-size: 12px;
+    color: var(--nf-text-muted);
+    margin-top: 2px;
+}
+
+.nf-receipt-divider {
+    border-color: var(--nf-border-light);
+    border-style: dashed;
+    margin: 12px 0;
+    opacity: 1;
+}
+
+.nf-receipt-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    padding: 5px 0;
+    color: var(--nf-text-secondary);
+}
+
+.nf-receipt-row strong {
+    color: var(--nf-text-primary);
+}
+
+.nf-receipt-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 8px 0;
+}
+
+.nf-receipt-total span:first-child {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--nf-text-secondary);
+}
+
+.nf-receipt-amount {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--nf-accent);
+    font-variant-numeric: tabular-nums;
+}
+
+.nf-receipt-note {
+    font-size: 12px;
+    color: var(--nf-text-muted);
+    background: var(--nf-blue-bg);
+    border-radius: var(--nf-radius);
+    padding: 8px 12px;
+}
+
+.nf-receipt-footer {
+    color: var(--nf-text-secondary);
+    font-size: 12.5px;
+}
+
+.nf-receipt-footer p {
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--nf-text-primary);
+}
+
+/* --------------------------------------------------------------------------
+   Alerts
+   -------------------------------------------------------------------------- */
+.nf-alert-success {
+    background: var(--nf-green-bg);
+    border: 1px solid var(--nf-green);
+    color: var(--nf-green);
+    border-radius: var(--nf-radius);
+}
+
+.nf-alert-danger {
+    background: var(--nf-red-bg);
+    border: 1px solid var(--nf-red);
+    color: var(--nf-red);
+    border-radius: var(--nf-radius);
+}
+
+/* --------------------------------------------------------------------------
+   Empty states
+   -------------------------------------------------------------------------- */
+.nf-empty-icon {
+    font-size: 40px;
+    color: var(--nf-text-muted);
+}
+
+.nf-empty-text {
+    color: var(--nf-text-secondary);
+    font-size: 14px;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+    .nf-sidebar {
+        position: fixed;
+        left: -220px;
+        z-index: 200;
+        transition: left 0.25s;
+    }
+
+    .nf-sidebar.open {
+        left: 0;
+    }
+
+    .nf-main {
+        width: 100%;
+    }
+
+    .nf-page-title {
+        font-size: 18px;
+    }
+
+    .nf-stat-value {
+        font-size: 20px;
+    }
+
+    .nf-table thead th,
+    .nf-table tbody td {
+        padding: 10px 12px;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   Bootstrap overrides
+   -------------------------------------------------------------------------- */
+.form-check-input:checked {
+    background-color: var(--nf-accent);
+    border-color: var(--nf-accent);
+}
+
+.modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.text-success { color: var(--nf-green) !important; }
+.text-danger  { color: var(--nf-red)   !important; }
+.text-warning { color: var(--nf-amber) !important; }
+.text-muted   { color: var(--nf-text-muted) !important; }
+.text-secondary { color: var(--nf-text-secondary) !important; }
+
+/* --------------------------------------------------------------------------
+   Booking Calendar (Dashboard)
+   -------------------------------------------------------------------------- */
+.nf-cal-legend {
+    font-size: 12px;
+    color: var(--nf-text-secondary);
+}
+
+.nf-legend-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.nf-legend-available { background: var(--nf-green); }
+.nf-legend-booked     { background: var(--nf-blue); }
+.nf-legend-conducted  { background: var(--nf-slate); }
+.nf-legend-pending    { background: var(--nf-amber); }
+
+.nf-cal-wrap {
+    overflow-x: auto;
+    padding-bottom: 4px;
+}
+
+.nf-cal-grid {
+    display: grid;
+    gap: 8px;
+    min-width: 640px;
+}
+
+.nf-cal-head {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--nf-text-primary);
+    text-transform: uppercase;
+    padding: 10px 12px;
+    background: var(--nf-bg-card-hover);
+    border-radius: var(--nf-radius);
+    text-align: center;
+}
+
+.nf-cal-corner {
+    background: transparent;
+    text-align: left;
+}
+
+.nf-cal-time {
+    display: flex;
+    align-items: center;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--nf-text-secondary);
+    padding: 10px 12px;
+    white-space: nowrap;
+}
+
+.nf-cal-slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-height: 64px;
+    padding: 8px 10px;
+    border-radius: var(--nf-radius);
+    border: 1px dashed var(--nf-border-light);
+    font-size: 12.5px;
+    font-weight: 500;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.12s, box-shadow 0.12s, border-color 0.12s;
+}
+
+.nf-cal-slot-available {
+    background: var(--nf-green-bg);
+    border: 1px dashed var(--nf-green);
+    color: var(--nf-green);
+}
+
+.nf-cal-slot-available:hover {
+    background: var(--nf-green);
+    color: #fff;
+    border-style: solid;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+}
+
+.nf-cal-slot-booked {
+    border-style: solid;
+    background: var(--nf-bg-card-hover);
+    border-color: var(--nf-border-light);
+    color: var(--nf-text-primary);
+}
+
+.nf-cal-slot-booked:hover {
+    border-color: var(--nf-accent);
+    color: var(--nf-text-primary);
+    transform: translateY(-1px);
+}
+
+.nf-cal-slot-name {
+    font-weight: 600;
+    font-size: 12.5px;
+    color: var(--nf-text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+}
+
+.nf-cal-slot-badge {
+    font-size: 10px;
+    padding: 2px 8px;
+}
+
+.nf-cal-slot-confirmed  { background: var(--nf-blue-bg);  border-color: var(--nf-blue); }
+.nf-cal-slot-conducted  { background: var(--nf-slate-bg); border-color: var(--nf-slate); }
+.nf-cal-slot-pending    { background: var(--nf-amber-bg); border-color: var(--nf-amber); }
+.nf-cal-slot-rescheduled{ background: var(--nf-slate-bg); border-color: var(--nf-slate); }
+
+/* Slot time has already passed and nothing was ever booked into it —
+   no longer offered as bookable. */
+.nf-cal-slot-unavailable {
+    background: var(--nf-bg-card-hover);
+    border: 1px dashed var(--nf-border-light);
+    color: var(--nf-text-secondary);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Slot time has already passed but staff never marked it conducted /
+   cancelled / no-show — shown as "Ended" so it's visually distinct
+   from a still-upcoming confirmed/pending booking. */
+.nf-cal-slot-ended {
+    background: var(--nf-slate-bg);
+    border-color: var(--nf-slate);
+    opacity: 0.85;
+}
