@@ -20,6 +20,7 @@ use App\Http\Controllers\Auth\StaffRegisterController;
 use App\Http\Controllers\TrainerPortalController;
 use App\Http\Controllers\SchedulingController;
 use App\Http\Controllers\SessionCreditInventoryController;
+use App\Http\Controllers\StaffSettingsController;
 
 // ── Public landing page ──────────────────────────────────────────
 Route::get('/', function () {
@@ -122,6 +123,14 @@ Route::middleware('auth:staff')->group(function () {
     Route::delete('scheduling/{trainerSession}', [SchedulingController::class, 'destroy'])->name('scheduling.destroy');
 
     Route::get('session-credit-inventory', [SessionCreditInventoryController::class, 'index'])->name('session-credit-inventory.index');
+
+    Route::get('settings', [StaffSettingsController::class, 'index'])->name('staff.settings.index');
+    Route::patch('settings/profile', [StaffSettingsController::class, 'updateProfile'])->name('staff.settings.profile.update');
+    Route::put('settings/password', [StaffSettingsController::class, 'updatePassword'])->name('staff.settings.password.update');
+
+    Route::get('help', function () {
+        return view('staff.help.index');
+    })->name('staff.help.index');
 });
 
 Route::middleware('auth')->group(function () {

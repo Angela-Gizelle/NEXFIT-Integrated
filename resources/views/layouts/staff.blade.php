@@ -828,10 +828,10 @@
         </a>
 
         <div class="nav-section-label">Support</div>
-        <a href="#" class="nav-link {{ request()->routeIs('settings*') ? 'active' : '' }}">
+        <a href="{{ route('staff.settings.index') }}" class="nav-link {{ request()->routeIs('staff.settings*') ? 'active' : '' }}">
             <i class="bi bi-gear"></i> Settings
         </a>
-        <a href="#" class="nav-link">
+        <a href="{{ route('staff.help.index') }}" class="nav-link {{ request()->routeIs('staff.help*') ? 'active' : '' }}">
             <i class="bi bi-question-circle"></i> Help
         </a>
     </nav>
