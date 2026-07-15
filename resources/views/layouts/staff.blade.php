@@ -803,7 +803,7 @@
         <a href="{{ route('scheduling.index') }}" class="nav-link {{ request()->routeIs('scheduling*') ? 'active' : '' }}">
             <i class="bi bi-calendar-check"></i> Scheduling
         </a>
-        <a href="#" class="nav-link {{ request()->routeIs('session-management.*') ? 'active' : '' }}">
+        <a href="{{ route('session-management.index') }}" class="nav-link {{ request()->routeIs('session-management.*') ? 'active' : '' }}">
             <i class="bi bi-calendar2-week"></i>
             Session Management
         </a>
@@ -811,6 +811,10 @@
                 <i class="bi bi-box-seam"></i>
                 Session Credit Inventory
             </a>
+        <a href="{{ route('package-sales.index') }}" class="nav-link {{ request()->routeIs('package-sales.*') ? 'active' : '' }}">
+            <i class="bi bi-bag-check"></i>
+            Package Sales
+        </a>
         <a href="{{ route('members.index') }}" class="nav-link {{ request()->routeIs('members.*') ? 'active' : '' }}">
             <i class="bi bi-people"></i> Members
         </a>

@@ -19,8 +19,8 @@ use App\Http\Controllers\Auth\StaffLoginController;
 use App\Http\Controllers\Auth\StaffRegisterController;
 use App\Http\Controllers\TrainerPortalController;
 use App\Http\Controllers\SchedulingController;
-use App\Http\Controllers\SessionCreditInventoryController;
-use App\Http\Controllers\StaffSettingsController;
+use App\Http\Controllers\SessionController;
+use App\Http\Controllers\SessionPackageSaleController;
 
 // ── Public landing page ──────────────────────────────────────────
 Route::get('/', function () {
@@ -122,15 +122,30 @@ Route::middleware('auth:staff')->group(function () {
     Route::post('scheduling', [SchedulingController::class, 'store'])->name('scheduling.store');
     Route::delete('scheduling/{trainerSession}', [SchedulingController::class, 'destroy'])->name('scheduling.destroy');
 
-    Route::get('session-credit-inventory', [SessionCreditInventoryController::class, 'index'])->name('session-credit-inventory.index');
+    // ── Session Management module (Session Inventory Tracking) ────
+    Route::prefix('session-management')->name('session-management.')->group(function () {
+        Route::get('/',                 [SessionController::class, 'index'])->name('index');
+        Route::get('/create',           [SessionController::class, 'create'])->name('create');
+        Route::post('/',                [SessionController::class, 'store'])->name('store');
+        Route::get('/{session}',        [SessionController::class, 'show'])->name('show');
+        Route::patch('/{session}/mark-conducted', [SessionController::class, 'markConducted'])->name('markConducted');
+        Route::patch('/{session}/cancel',         [SessionController::class, 'cancel'])->name('cancel');
+        Route::patch('/{session}/restore',        [SessionController::class, 'restore'])->name('restore');
+    });
 
-    Route::get('settings', [StaffSettingsController::class, 'index'])->name('staff.settings.index');
-    Route::patch('settings/profile', [StaffSettingsController::class, 'updateProfile'])->name('staff.settings.profile.update');
-    Route::put('settings/password', [StaffSettingsController::class, 'updatePassword'])->name('staff.settings.password.update');
+    // ── Session Credit Inventory (per-member balances + manual adjustment) ─
+    Route::prefix('session-credit-inventory')->name('session-credit-inventory.')->group(function () {
+        Route::get('/', [SessionController::class, 'inventory'])->name('index');
+        Route::post('/members/{member}/adjust-credit', [SessionController::class, 'adjustCredit'])->name('adjustCredit');
+    });
 
-    Route::get('help', function () {
-        return view('staff.help.index');
-    })->name('staff.help.index');
+    // ── Session Package Sales ──────────────────────────────────────
+    Route::prefix('package-sales')->name('package-sales.')->group(function () {
+        Route::get('/',              [SessionPackageSaleController::class, 'index'])->name('index');
+        Route::get('/create',        [SessionPackageSaleController::class, 'create'])->name('create');
+        Route::post('/',             [SessionPackageSaleController::class, 'store'])->name('store');
+        Route::get('/{packageSale}', [SessionPackageSaleController::class, 'show'])->name('show');
+    });
 });
 
 Route::middleware('auth')->group(function () {
@@ -168,4 +183,7 @@ Route::middleware('auth:trainer')->prefix('trainer')->name('trainer.')->group(fu
     Route::get('/members', [TrainerPortalController::class, 'members'])->name('members');
     Route::get('/schedule', [TrainerPortalController::class, 'schedule'])->name('schedule');
     Route::get('/training-plan', [TrainerPortalController::class, 'trainingPlan'])->name('training-plan');
+
+    // Session Management module — read-only view of this trainer's own sessions
+    Route::get('/sessions', [SessionController::class, 'trainerIndex'])->name('sessions');
 });

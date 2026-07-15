@@ -10,117 +10,58 @@
 
 @push('styles')
 <style>
-    /* =====================  SECTION EYEBROW  ===================== */
-    .sched-eyebrow {
-        display: flex;
-        align-items: center;
-        gap: .55rem;
-        font-weight: 800;
-        font-size: .95rem;
-        color: var(--text-strong);
-        margin-bottom: .65rem;
-    }
-    .sched-eyebrow-icon {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 26px;
-        height: 26px;
-        border-radius: 7px;
-        background: var(--accent-soft);
-        color: var(--accent);
-        font-size: .85rem;
-        flex-shrink: 0;
-    }
-
     /* =====================  SCHEDULING TOOLBAR  ===================== */
     .sched-toolbar {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: .75rem 1.25rem;
+        gap: .75rem;
         flex-wrap: wrap;
-        padding: .85rem 1.1rem;
+        padding: .9rem 1.1rem;
         border-bottom: 1px solid var(--border);
     }
     .sched-toolbar-left,
     .sched-toolbar-right {
         display: flex;
         align-items: center;
-        gap: .65rem;
+        gap: .5rem;
         flex-wrap: wrap;
     }
     .sched-nav-group {
         display: inline-flex;
         align-items: center;
-        gap: .4rem;
+        border: 1px solid var(--border-soft);
+        border-radius: var(--radius-sm);
+        overflow: hidden;
     }
     .sched-nav-group .btn {
-        border: 1px solid var(--border-soft);
-        border-radius: var(--radius-sm);
+        border: none;
+        border-radius: 0;
         background: var(--surface-2);
-        width: 30px;
-        height: 30px;
-        padding: 0;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
     }
-    .sched-date-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: .45rem;
-        border: 1px solid var(--border-soft);
-        background: var(--surface-2);
-        border-radius: var(--radius-sm);
-        padding: .38rem .8rem;
+    .sched-nav-group .btn + .btn { border-left: 1px solid var(--border-soft); }
+    .sched-week-label {
         font-weight: 700;
-        font-size: .82rem;
+        font-size: .85rem;
         color: var(--text-strong);
-        white-space: nowrap;
+        min-width: 168px;
+        text-align: center;
     }
-    .sched-date-badge i { color: var(--accent); }
-    .sched-today-link {
-        font-size: .78rem;
-        font-weight: 700;
-        border: 1px solid var(--border-soft);
-        border-radius: var(--radius-sm);
-        padding: .35rem .7rem;
-        background: var(--surface-2);
-        color: var(--text-muted);
-    }
-    .sched-today-link:hover { color: var(--accent); border-color: var(--accent); }
-
-    .sched-trainer-group {
-        display: inline-flex;
-        align-items: center;
-        gap: .5rem;
-    }
-    .sched-trainer-label {
-        font-size: .68rem;
-        font-weight: 700;
-        letter-spacing: .06em;
-        text-transform: uppercase;
-        color: var(--text-faint);
-    }
-    .sched-trainer-group .form-select { max-width: 190px; }
-
     .sched-legend {
         display: flex;
         align-items: center;
-        gap: .9rem;
+        gap: 1rem;
         flex-wrap: wrap;
-        font-size: .72rem;
-        font-weight: 600;
+        padding: .6rem 1.1rem;
+        font-size: .74rem;
         color: var(--text-muted);
-        padding-left: .5rem;
-        border-left: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
     }
-    .sched-legend-item { display: inline-flex; align-items: center; gap: .35rem; }
-    .sched-swatch { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
-    .sw-available { background: var(--success); }
-    .sw-booked    { background: var(--info); }
-    .sw-conducted { background: var(--neutral); }
+    .sched-legend-item { display: inline-flex; align-items: center; gap: .4rem; }
+    .sched-swatch { width: 13px; height: 13px; border-radius: 4px; display: inline-block; flex-shrink: 0; }
+    .sw-available { background: var(--surface-2); border: 1px solid var(--border-soft); }
+    .sw-booked    { background: var(--accent-soft); border: 1px solid var(--accent); }
+    .sw-past      { background: var(--surface-3); border: 1px solid var(--border-soft); }
     .sw-today     { background: var(--accent); }
 
     /* =====================  GRID  ===================== */
@@ -130,9 +71,8 @@
     }
     .sched-grid {
         display: grid;
-        grid-template-columns: 78px repeat(7, minmax(132px, 1fr));
-        min-width: 990px;
-        background: var(--surface);
+        grid-template-columns: 78px repeat(7, minmax(128px, 1fr));
+        min-width: 980px;
     }
     .sched-cell {
         border-bottom: 1px solid var(--border);
@@ -147,10 +87,10 @@
         z-index: 3;
         background: var(--surface);
         text-align: center;
-        padding: .6rem .3rem;
+        padding: .55rem .3rem;
     }
     .sched-head .day-name {
-        font-size: .66rem;
+        font-size: .68rem;
         font-weight: 700;
         letter-spacing: .06em;
         text-transform: uppercase;
@@ -189,75 +129,42 @@
     .sched-time.hour-mark { border-top: 1px solid var(--border-soft); }
 
     .sched-slot {
-        min-height: 56px;
+        min-height: 40px;
         cursor: pointer;
         position: relative;
-        padding: .28rem;
+        transition: background .12s ease;
+        padding: .2rem .4rem;
         display: flex;
-        align-items: stretch;
+        align-items: center;
     }
     .sched-slot.hour-mark { border-top: 1px solid var(--border-soft); }
-    .sched-slot.is-past { cursor: not-allowed; }
-    .sched-slot.is-selected .slot-chip { outline: 2px solid var(--accent); outline-offset: -2px; }
-
-    /* ---- chip shared ---- */
-    .slot-chip {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: .15rem;
-        border-radius: var(--radius-sm);
-        border: 1px solid transparent;
-        text-align: center;
-        padding: .3rem .2rem;
-        transition: background .12s ease, border-color .12s ease, transform .12s ease;
-    }
-    .slot-chip i { font-size: .82rem; line-height: 1; }
-    .slot-chip .chip-label {
-        font-size: .66rem;
+    .sched-slot.is-available { background: var(--surface-2); }
+    .sched-slot.is-available:hover { background: var(--accent-soft); }
+    .sched-slot.is-available:hover::after {
+        content: "+ Book";
+        font-size: .68rem;
         font-weight: 700;
-        letter-spacing: .01em;
+        color: var(--accent);
+    }
+    .sched-slot.is-booked {
+        background: var(--accent-soft);
+        border-left: 3px solid var(--accent);
+    }
+    .sched-slot.is-booked:hover { background: var(--accent-ring); }
+    .sched-slot.is-past {
+        background: var(--surface-3);
+        cursor: not-allowed;
+    }
+    .sched-slot.is-selected { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+    .slot-member {
+        font-size: .72rem;
+        font-weight: 700;
+        color: var(--text-strong);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 100%;
     }
-
-    /* ---- available ---- */
-    .sched-slot.is-available .slot-chip {
-        background: var(--success-bg);
-        color: var(--success);
-    }
-    .sched-slot.is-available:hover .slot-chip {
-        border-color: var(--success);
-        transform: translateY(-1px);
-    }
-
-    /* ---- booked ---- */
-    .sched-slot.is-booked .slot-chip {
-        background: var(--info-bg);
-        color: var(--info);
-    }
-    .sched-slot.is-booked .slot-chip .chip-label { color: var(--text-strong); }
-    .sched-slot.is-booked:hover .slot-chip { border-color: var(--info); }
-
-    /* ---- conducted (past + booked) ---- */
-    .sched-slot.is-conducted .slot-chip {
-        background: var(--neutral-bg);
-        color: var(--text-faint);
-    }
-    .sched-slot.is-conducted .slot-chip .chip-label { color: var(--text-muted); }
-
-    /* ---- unavailable (past + empty) ---- */
-    .sched-slot.is-unavailable .slot-chip {
-        background: transparent;
-        border: 1px dashed var(--border-soft);
-        color: var(--text-faint);
-    }
-
-    .slot-member { display: none; } /* legacy hook, superseded by .chip-label */
 
     #bookingModal .modal-content,
     #detailsModal .modal-content {
@@ -291,45 +198,40 @@
 
 @section('content')
 
-<div class="sched-eyebrow">
-    <span class="sched-eyebrow-icon"><i class="bi bi-calendar2-week-fill"></i></span>
-    All Bookings
-</div>
-
 <div class="card">
     <div class="sched-toolbar">
         <div class="sched-toolbar-left">
+            <label for="trainerSelect" class="mb-0" style="text-transform:none;letter-spacing:0;font-size:.8rem;">Trainer</label>
+            <select id="trainerSelect" class="form-select form-select-sm" style="max-width: 200px;">
+                @forelse($trainers as $trainer)
+                    <option value="{{ $trainer->id }}" @selected($trainer->id === $trainerId)>{{ $trainer->name }}</option>
+                @empty
+                    <option value="">No trainers yet</option>
+                @endforelse
+            </select>
+        </div>
+
+        <div class="sched-toolbar-right">
             <div class="sched-nav-group">
                 <a class="btn btn-sm" href="{{ route('scheduling.index', ['week' => $prevWeek, 'trainer' => $trainerId]) }}" title="Previous week">
                     <i class="bi bi-chevron-left"></i>
                 </a>
-                <span class="sched-date-badge"><i class="bi bi-calendar3"></i> {{ $weekStart->format('M j') }} &ndash; {{ $weekEnd->format('M j, Y') }}</span>
+                <a class="btn btn-sm" href="{{ route('scheduling.index', ['week' => $todayWeek, 'trainer' => $trainerId]) }}">
+                    Today
+                </a>
                 <a class="btn btn-sm" href="{{ route('scheduling.index', ['week' => $nextWeek, 'trainer' => $trainerId]) }}" title="Next week">
                     <i class="bi bi-chevron-right"></i>
                 </a>
             </div>
-            <a class="sched-today-link" href="{{ route('scheduling.index', ['week' => $todayWeek, 'trainer' => $trainerId]) }}">Today</a>
+            <div class="sched-week-label">{{ $weekStart->format('M j') }} &ndash; {{ $weekEnd->format('M j, Y') }}</div>
         </div>
+    </div>
 
-        <div class="sched-toolbar-right">
-            <div class="sched-trainer-group">
-                <span class="sched-trainer-label">Trainer</span>
-                <select id="trainerSelect" class="form-select form-select-sm">
-                    @forelse($trainers as $trainer)
-                        <option value="{{ $trainer->id }}" @selected($trainer->id === $trainerId)>{{ $trainer->name }}</option>
-                    @empty
-                        <option value="">No trainers yet</option>
-                    @endforelse
-                </select>
-            </div>
-
-            <div class="sched-legend">
-                <span class="sched-legend-item"><span class="sched-swatch sw-available"></span> Available</span>
-                <span class="sched-legend-item"><span class="sched-swatch sw-booked"></span> Booked</span>
-                <span class="sched-legend-item"><span class="sched-swatch sw-conducted"></span> Conducted</span>
-                <span class="sched-legend-item"><span class="sched-swatch sw-today"></span> Today</span>
-            </div>
-        </div>
+    <div class="sched-legend">
+        <span class="sched-legend-item"><span class="sched-swatch sw-available"></span> Available</span>
+        <span class="sched-legend-item"><span class="sched-swatch sw-booked"></span> Booked</span>
+        <span class="sched-legend-item"><span class="sched-swatch sw-past"></span> Past</span>
+        <span class="sched-legend-item"><span class="sched-swatch sw-today"></span> Today</span>
     </div>
 
     <div class="card-body p-0">
@@ -353,12 +255,9 @@
                     @foreach($days as $day)
                         @php
                             $booking = $bookings[$day['date']][$slot['time']] ?? null;
-                            if ($day['isPast']) {
-                                $stateClass = $booking ? 'is-conducted is-past' : 'is-unavailable is-past';
-                            } else {
-                                $stateClass = $booking ? 'is-booked' : 'is-available';
-                            }
-                            $memberName = $booking->member->full_name ?? 'Blocked';
+                            $stateClass = $day['isPast']
+                                ? 'is-past'
+                                : ($booking ? 'is-booked' : 'is-available');
                         @endphp
                         <div
                             class="sched-cell sched-slot {{ $stateClass }} {{ $slot['isHour'] ? 'hour-mark' : '' }}"
@@ -368,24 +267,15 @@
                             data-day-label="{{ $day['label'] }}, {{ $day['dateLabel'] }}"
                             @if($booking)
                                 data-session-id="{{ $booking->id }}"
-                                data-member-name="{{ $memberName }}"
+                                data-member-name="{{ $booking->member->full_name ?? 'Blocked' }}"
                                 data-notes="{{ $booking->notes }}"
                                 data-start-label="{{ $booking->start_label }}"
                                 data-end-label="{{ $booking->end_label }}"
                             @endif
                         >
-                            <div class="slot-chip">
-                                @if($booking)
-                                    <i class="bi {{ $day['isPast'] ? 'bi-check2-circle' : 'bi-person-check-fill' }}"></i>
-                                    <span class="chip-label">{{ $memberName }}</span>
-                                @elseif($day['isPast'])
-                                    <i class="bi bi-slash-circle"></i>
-                                    <span class="chip-label">Unavailable</span>
-                                @else
-                                    <i class="bi bi-plus-lg"></i>
-                                    <span class="chip-label">Available</span>
-                                @endif
-                            </div>
+                            @if($booking)
+                                <span class="slot-member">{{ $booking->member->full_name ?? 'Blocked' }}</span>
+                            @endif
                         </div>
                     @endforeach
                 @endforeach
@@ -583,8 +473,7 @@
         cell.dataset.notes       = session.notes || '';
         cell.dataset.startLabel  = session.start_label;
         cell.dataset.endLabel    = session.end_label;
-        cell.innerHTML = '<div class="slot-chip"><i class="bi bi-person-check-fill"></i><span class="chip-label">' +
-            escapeHtml(session.member_name) + '</span></div>';
+        cell.innerHTML = '<span class="slot-member">' + escapeHtml(session.member_name) + '</span>';
     }
 
     function openDetailsModal(cell) {
@@ -642,7 +531,7 @@
         delete cell.dataset.notes;
         delete cell.dataset.startLabel;
         delete cell.dataset.endLabel;
-        cell.innerHTML = '<div class="slot-chip"><i class="bi bi-plus-lg"></i><span class="chip-label">Available</span></div>';
+        cell.innerHTML = '';
     }
 
     function escapeHtml(str) {

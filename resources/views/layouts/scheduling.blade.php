@@ -806,7 +806,7 @@
             <i class="bi bi-calendar2-week"></i>
             Session Management
         </a>
-        <a href="{{ route('session-credit-inventory.index') }}" class="nav-link {{ request()->routeIs('session-credit-inventory.*') ? 'active' : '' }}">
+        <a href="#" class="nav-link {{ request()->routeIs('session-credit-inventory.*') ? 'active' : '' }}">
                 <i class="bi bi-box-seam"></i>
                 Session Credit Inventory
             </a>
