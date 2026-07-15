@@ -21,6 +21,7 @@ use App\Http\Controllers\TrainerPortalController;
 use App\Http\Controllers\SchedulingController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\SessionPackageSaleController;
+use App\Http\Controllers\StaffSettingsController;
 
 // ── Public landing page ──────────────────────────────────────────
 Route::get('/', function () {
@@ -146,6 +147,16 @@ Route::middleware('auth:staff')->group(function () {
         Route::post('/',             [SessionPackageSaleController::class, 'store'])->name('store');
         Route::get('/{packageSale}', [SessionPackageSaleController::class, 'show'])->name('show');
     });
+
+    // ── Staff Settings (Account profile + password) ────────────────
+    Route::get('settings', [StaffSettingsController::class, 'index'])->name('staff.settings.index');
+    Route::patch('settings/profile', [StaffSettingsController::class, 'updateProfile'])->name('staff.settings.profile.update');
+    Route::put('settings/password', [StaffSettingsController::class, 'updatePassword'])->name('staff.settings.password.update');
+
+    // ── Staff Help (static FAQ / contact page) ──────────────────────
+    Route::get('help', function () {
+        return view('staff.help.index');
+    })->name('staff.help.index');
 });
 
 Route::middleware('auth')->group(function () {
