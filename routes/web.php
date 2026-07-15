@@ -15,6 +15,12 @@ use App\Http\Controllers\Member\DashboardController as MemberDashboardController
 use App\Http\Controllers\Member\ParqReassessController;
 use App\Http\Controllers\Member\MembershipSignupController;
 use App\Http\Controllers\Member\TrainingPlanController;
+use App\Http\Controllers\Auth\StaffLoginController;
+use App\Http\Controllers\Auth\StaffRegisterController;
+use App\Http\Controllers\TrainerPortalController;
+use App\Http\Controllers\SchedulingController;
+use App\Http\Controllers\SessionController;
+use App\Http\Controllers\SessionPackageSaleController;
 
 // ── Public landing page ──────────────────────────────────────────
 Route::get('/', function () {
@@ -102,16 +108,44 @@ Route::middleware('auth')->group(function () {
     Route::post('/member/training-plan/regenerate', [TrainingPlanController::class, 'regenerate'])->name('member.training-plan.regenerate');
 });
 
-// ── Staff: membership management (Membership module) ─────────────
-// NOTE: only gated behind `auth` for now — there's no staff/admin role
-// on the User model yet, so any logged-in account can reach these.
-// Tighten this with a role/permission check before going live.
-Route::middleware('auth')->group(function () {
+// ── Staff: membership management + scheduling (Membership module) ─
+// Now properly gated behind the `staff` guard (added alongside the
+// staff/trainer/admin auth portal).
+Route::middleware('auth:staff')->group(function () {
     Route::post('members/expire-memberships', [MemberController::class, 'expireMemberships'])
         ->name('members.expire');
     Route::get('members/{member}/renew',  [MemberController::class, 'renewForm'])->name('members.renew');
     Route::post('members/{member}/renew', [MemberController::class, 'renew'])->name('members.renew.store');
     Route::resource('members', MemberController::class);
+
+    Route::get('scheduling', [SchedulingController::class, 'index'])->name('scheduling.index');
+    Route::post('scheduling', [SchedulingController::class, 'store'])->name('scheduling.store');
+    Route::delete('scheduling/{trainerSession}', [SchedulingController::class, 'destroy'])->name('scheduling.destroy');
+
+    // ── Session Management module (Session Inventory Tracking) ────
+    Route::prefix('session-management')->name('session-management.')->group(function () {
+        Route::get('/',                 [SessionController::class, 'index'])->name('index');
+        Route::get('/create',           [SessionController::class, 'create'])->name('create');
+        Route::post('/',                [SessionController::class, 'store'])->name('store');
+        Route::get('/{session}',        [SessionController::class, 'show'])->name('show');
+        Route::patch('/{session}/mark-conducted', [SessionController::class, 'markConducted'])->name('markConducted');
+        Route::patch('/{session}/cancel',         [SessionController::class, 'cancel'])->name('cancel');
+        Route::patch('/{session}/restore',        [SessionController::class, 'restore'])->name('restore');
+    });
+
+    // ── Session Credit Inventory (per-member balances + manual adjustment) ─
+    Route::prefix('session-credit-inventory')->name('session-credit-inventory.')->group(function () {
+        Route::get('/', [SessionController::class, 'inventory'])->name('index');
+        Route::post('/members/{member}/adjust-credit', [SessionController::class, 'adjustCredit'])->name('adjustCredit');
+    });
+
+    // ── Session Package Sales ──────────────────────────────────────
+    Route::prefix('package-sales')->name('package-sales.')->group(function () {
+        Route::get('/',              [SessionPackageSaleController::class, 'index'])->name('index');
+        Route::get('/create',        [SessionPackageSaleController::class, 'create'])->name('create');
+        Route::post('/',             [SessionPackageSaleController::class, 'store'])->name('store');
+        Route::get('/{packageSale}', [SessionPackageSaleController::class, 'show'])->name('show');
+    });
 });
 
 Route::middleware('auth')->group(function () {
@@ -121,3 +155,35 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__ . '/auth.php';
+
+// ── Staff / Admin / Trainer portal (Membership module) ────────────
+// Separate from the member-facing Breeze auth above: staff/admin
+// accounts live in `staff` (role: Staff|Admin) and trainers in
+// `trainers`, each behind their own guard.
+Route::middleware('guest')->prefix('staff')->name('staff.')->group(function () {
+    Route::get('/login', [StaffLoginController::class, 'create'])->name('login');
+    Route::post('/login', [StaffLoginController::class, 'store']);
+
+    // Trainers are the only self-registering account type here.
+    Route::get('/register', [StaffRegisterController::class, 'create'])->name('register');
+    Route::post('/register', [StaffRegisterController::class, 'store']);
+});
+
+Route::post('/staff/logout', [StaffLoginController::class, 'destroy'])
+    ->middleware('auth:staff,trainer')
+    ->name('staff.logout');
+
+Route::get('/staff/dashboard', function () {
+    return view('staff.dashboard');
+})->middleware('auth:staff')->name('staff.dashboard');
+
+Route::middleware('auth:trainer')->prefix('trainer')->name('trainer.')->group(function () {
+    Route::get('/home', [TrainerPortalController::class, 'home'])->name('home');
+    Route::get('/dashboard', [TrainerPortalController::class, 'dashboard'])->name('dashboard');
+    Route::get('/members', [TrainerPortalController::class, 'members'])->name('members');
+    Route::get('/schedule', [TrainerPortalController::class, 'schedule'])->name('schedule');
+    Route::get('/training-plan', [TrainerPortalController::class, 'trainingPlan'])->name('training-plan');
+
+    // Session Management module — read-only view of this trainer's own sessions
+    Route::get('/sessions', [SessionController::class, 'trainerIndex'])->name('sessions');
+});

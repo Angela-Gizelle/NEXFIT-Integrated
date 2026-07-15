@@ -74,12 +74,12 @@ class Session extends Model
 
     public function conductedBy()
     {
-        return $this->belongsTo(User::class, 'conducted_by');
+        return $this->belongsTo(Staff::class, 'conducted_by', 'staff_id');
     }
 
     public function cancelledBy()
     {
-        return $this->belongsTo(User::class, 'cancelled_by');
+        return $this->belongsTo(Staff::class, 'cancelled_by', 'staff_id');
     }
 
     public function scopeToday($query)

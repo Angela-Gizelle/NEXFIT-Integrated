@@ -43,7 +43,7 @@ class SessionPackageSale extends Model
 
     public function processedBy()
     {
-        return $this->belongsTo(User::class, 'processed_by');
+        return $this->belongsTo(Staff::class, 'processed_by', 'staff_id');
     }
 
     public function sessions()

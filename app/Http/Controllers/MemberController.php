@@ -146,7 +146,7 @@ class MemberController extends Controller
             'credits_used'    => 0,
             'amount_paid'     => $request->amount_paid,
             'payment_mode'    => $request->payment_mode,
-            'processed_by'    => auth()->id(),
+            'processed_by'    => auth('staff')->id(),
             'status'          => 'Active',
         ]);
 
@@ -271,7 +271,7 @@ class MemberController extends Controller
             'credits_used'    => 0,
             'amount_paid'     => $request->amount_paid,
             'payment_mode'    => $request->payment_mode,
-            'processed_by'    => auth()->id(),
+            'processed_by'    => auth('staff')->id(),
             'status'          => 'Active',
         ]);
 

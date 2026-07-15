@@ -2,23 +2,37 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-class Trainer extends Model
+// Trainer is both a booking-system profile (specialization, schedules, etc.)
+// AND a self-registering login account (auth:trainer guard) — see
+// Auth\RegisterController and Auth\LoginController. It extends
+// Authenticatable instead of the plain Eloquent Model so it can log in.
+class Trainer extends Authenticatable
 {
+    use Notifiable;
+
     protected $fillable = [
         'name',
         'email',
         'phone',
+        'password',
         'specialization',
         'trainer_level',
         'is_available',
         'is_active',
     ];
 
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
     protected $casts = [
         'is_available' => 'boolean',
         'is_active'    => 'boolean',
+        'password'     => 'hashed',
     ];
 
     public function schedules()
